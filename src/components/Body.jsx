@@ -5,11 +5,12 @@ export const Body = () => {
     const [shoppingCartItems,setShoppingCartItems] = useState(initialState);
   return (
     <div>
-        {shoppingCartItems.map((object,index) => ( 
-            <div>
-                {"{ "}productName: {object.productName}, productCategory:{object.productCategory}, price:{object.price}{" }"}
-            </div>
-        ))}
+        {shoppingCartItems.map((object,index) => <React.Fragment key={index}>
+                <div>
+                    {"{ "}productName: {object.productName}, productCategory:{object.productCategory}, price:{object.price}{" }"}
+                </div>
+            </React.Fragment>
+        )}
     </div>
   )
 }
