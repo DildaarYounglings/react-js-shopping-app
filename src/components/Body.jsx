@@ -8,26 +8,19 @@ export const Body = () => {
   const [shoppingCartItems, setShoppingCartItems] = useState(initialState);
   const [readyToBuy, setReadyToBuy] = useState([]);
   const checkIfCartHasTheSameItem = (product) => {
-    if(!product){return}
     const allItemsToCheck = readyToBuy.map((item) => item.productName);
-    allItemsToCheck.forEach((item) => {
-        if(item === product.productName){
-            return false
-        }else{
-            return true
-        }
-    })
-    }
+    let result = allItemsToCheck.includes(product.productName);
+    return result;
   }
   const addToCart = (product) => {
-    if(checkIfCartHasTheSameItem(product)){
+    if(checkIfCartHasTheSameItem(product) === false){
         let copy = [...readyToBuy,product];
         setReadyToBuy(copy);
     }
     console.log(readyToBuy);
   }
   return (
-    <div style={{outline:"1px solid blue"}}>
+    <div>
       {shoppingCartItems.map((object, index) => (
         <React.Fragment key={index}>
           <div style={{outline:"1px solid cyan"}}>
@@ -39,7 +32,7 @@ export const Body = () => {
       {readyToBuy && readyToBuy.map((object, index) => (
         <React.Fragment key={index}>
           <div style={{outline:"1px solid green"}}>
-            {"{ "}productName: {object.productName}, productCategory:{object.productCategory}, price:{object.price}{" }"}
+            <p>productName: {object.productName},</p><p>productCategory:{object.productCategory},</p><p>price:{object.price}</p>
           </div>
         </React.Fragment>
       ))}
