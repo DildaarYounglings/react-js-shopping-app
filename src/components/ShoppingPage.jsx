@@ -1,23 +1,48 @@
-import React, { useState } from "react";
+import React, { useRef} from "react";
 import { ShoppingCartStateGlobalContextData } from "../context/ShopingCartState";
 import { ShoppingPageHeader } from "./ShoppingPageHeader";
 import { ShoppingPageFooter } from "./ShoppingPageFooter";
 
 export const ShoppingCartItem = ({item,addToCart}) => {
+  const dialogRef = useRef();
+  const open = () => {
+    dialogRef.current.showModal()
+  };
+  const close = () => {
+    dialogRef.current.close()
+  }
   return (
     <div>
       <p>productName: {item.productName},</p>productCategory:{item.productCategory},<p></p><p>price:{item.price}</p>
-      <button onClick={() => addToCart(item)}>Add</button>
+      <button onClick={() => addToCart(item)}>Add</button><button onClick={() => open()}>Comment</button>
+      <dialog ref={dialogRef} style={{}}>
+        <ul style={{listStyleType:"none",display:"flex",flexDirection:"column",translate:"-3rem -1rem"}}>
+          <li onClick={() => close()}>
+            <p style={{fontSize:"1.19rem",fontWeight:"lighter",fontStyle:"italic"}}>
+              Comments
+            </p>
+          </li>
+        </ul>
+        <ul>
+          {item.Comments.map((comment,index) => <li key={index}>
+            <p style={{fontSize:"1.1rem",fontWeight:"lighter",fontStyle:"italic"}}>{comment.username}</p>
+            <article>
+              {comment.content}
+            </article>
+          </li>)}
+        </ul>
+      </dialog>
     </div>
   )
 }
-export const ReadyToBuyItem = ({ item }) => {
+export const ReadyToBuyItem = ({ item,handleDeleteThisItem}) => {
   if (!item) {
     console.log(item)
     return <div>nothing is appearing</div>
   }
   return (
     <div>
+      <button onClick={() => handleDeleteThisItem(item)}>Remove</button>
       <p>productName: {item.productName},</p><p>productCategory:{item.productCategory},</p><p>price:{item.price}</p>
     </div>
   )
@@ -34,9 +59,11 @@ export const ShoppingPage = () => {
       {shoppingCartItems.map((object, index) => (
         <ShoppingCartItem key={index} item={object} addToCart={handleAddToCheckoutCart}/>
       ))}
-      {readyToBuyItems && readyToBuyItems.map((object, index) => (
-        <ReadyToBuyItem key={index} item={object} />
-      ))}
+      <div>
+        {readyToBuyItems && readyToBuyItems.map((object, index) => (
+          <ReadyToBuyItem key={index} item={object} handleDeleteThisItem={handleDeleteItemFromCheckoutCart}/>
+        ))}
+      </div>
 
       <ShoppingPageFooter/>
     </div>
