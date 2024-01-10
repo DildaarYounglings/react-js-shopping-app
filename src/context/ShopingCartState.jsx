@@ -36,6 +36,7 @@ export const ShopingCartStateProvider = ({ children }) => {
     console.log(readyToBuy);
   }
   const handleClearCheckoutCart = () => {
+    if(window.alert("are you sure you wish to proceed to clear your carts items") === false)return;
     const { allCheckoutProducts } = globalState;
     let emptyArray = [];
     setGlobalState({ ...globalState, allCheckoutProducts: emptyArray });
