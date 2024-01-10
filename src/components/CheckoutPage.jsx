@@ -13,21 +13,22 @@ export const ReadyToBuyItem = ({ item,handleDeleteThisItem}) => {
       </div>
     )
 }
-export const ClearCheckoutCartButton = ({handleClearCheckoutCart}) => {
+export const ClearCheckoutCartButton = ({handleClearCheckoutCart,handleToggleIsCheckoutCartOpen}) => {
     return(
-        <div>
+        <article style={{display:"flex",gap:"1rem"}}>
             <button onClick={() => handleClearCheckoutCart()}>clear</button>
-        </div>
+            <button onClick={() => handleToggleIsCheckoutCartOpen()}>X</button>
+        </article>
     )
 }
 
 export const CheckoutPage = () => {
-  const {globalState,handleClearCheckoutCart,handleCheckIfCartHasTheSameItem,handleDeleteItemFromCheckoutCart} = ShoppingCartStateGlobalContextData();
+  const {globalState,handleClearCheckoutCart,handleDeleteItemFromCheckoutCart,handleToggleIsCheckoutCartOpen} = ShoppingCartStateGlobalContextData();
   const readyToBuyItems = globalState.allCheckoutProducts;
   return (
-    <div style={{display:"flex",width:"100%",padding:"1rem"}}>
-        <div>
-            <ClearCheckoutCartButton/>
+    <div style={{display:"flex",flexDirection:"column",width:"25%",gap:"1rem",padding:"0.1rem"}}>
+        <div style={{display:"flex",width:"25%",padding:"1rem",alignContent:"flex-end",alignItems:"flex-end"}}>
+            <ClearCheckoutCartButton handleToggleIsCheckoutCartOpen={handleToggleIsCheckoutCartOpen} handleClearCheckoutCart={handleClearCheckoutCart}/>
         </div>
         <div>
             {readyToBuyItems && readyToBuyItems.map((readyToBuyItem,index) => <ReadyToBuyItem key={index} item={readyToBuyItem} handleDeleteThisItem={handleDeleteItemFromCheckoutCart}/>)}

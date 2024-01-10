@@ -18,7 +18,21 @@ body {
   margin: 0;
   font-family: 'Lato', sans-serif;
 }
-
+.checkoutCartOpen{
+  position:absolute;
+  left:75%;
+  display:flex;
+  flex-direction:column;
+  width:25%;
+  gap:1rem;
+  padding:"1rem";
+  background-color:cyan;
+  transition-duration:5s;
+}
+.checkoutCartClose{
+  position:absolute;
+  display:none;
+}
 .container {
   margin: 30px auto;
   width: 350px;
