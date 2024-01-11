@@ -24,7 +24,6 @@ const initialState = {
   ],
   allCheckoutProducts: [],
   isCheckoutCartOpen:true,
-  isCheckoutCartOpenAnimationTriggered:true,
 };
 const ShoppingCartStateGlobalContext = React.createContext();
 // </> //
@@ -75,18 +74,9 @@ export const ShopingCartStateProvider = ({ children }) => {
     setGlobalState({ ...globalState, allCheckoutProducts: copy });
   };
   const handleToggleIsCheckoutCartOpen = () => {
-    const {isCheckoutCartOpen,isCheckoutCartOpenAnimationTriggered} = globalState;
-    switch(isCheckoutCartOpen){
-      case true:
-        setGlobalState({...globalState,isCheckoutCartOpenAnimationTriggered:false});
-        setTimeout(() => {setGlobalState({...globalState,isCheckoutCartOpen:false})},2500);
-        break;
-      case false:
-        setGlobalState({...globalState,isCheckoutCartOpen:true,});
-        setGlobalState({...globalState,isCheckoutCartOpenAnimationTriggered:true});
-        break;
-    }
-  }
+    const {isCheckoutCartOpen} = globalState;
+    setGlobalState({...globalState,isCheckoutCartOpen:!isCheckoutCartOpen});
+  };
   
   
   
@@ -98,7 +88,7 @@ export const ShopingCartStateProvider = ({ children }) => {
         handleClearCheckoutCart,
         handleCheckIfCartHasTheSameItem,
         handleDeleteItemFromCheckoutCart,
-        handleToggleIsCheckoutCartOpen,
+        handleToggleIsCheckoutCartOpen
       }}
     >
       {children}

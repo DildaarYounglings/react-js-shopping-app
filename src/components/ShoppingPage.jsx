@@ -39,7 +39,7 @@ export const ShoppingCartItem = ({item,addToCart}) => {
 
 
 export const ShoppingPage = () => {
-  const {globalState,handleAddToCheckoutCart,handleClearCheckoutCart,handleCheckIfCartHasTheSameItem,handleDeleteItemFromCheckoutCart} = ShoppingCartStateGlobalContextData();
+  const {globalState,handleAddToCheckoutCart} = ShoppingCartStateGlobalContextData();
   const shoppingCartItems = globalState.allShopProducts;
   const readyToBuyItems = globalState.allCheckoutProducts;
   return (
