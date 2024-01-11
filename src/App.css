@@ -88,6 +88,13 @@ body {
   outline:1px solid black;
   transition-duration:2s;
 }
+.ShoppingCartItem{
+  background-color:rgb(230, 230, 230);
+  width:fit-content;
+  padding:1rem;
+  outline: 1px solid black;
+  border-radius:1rem;
+}
 .container {
   margin: 30px auto;
   width: 350px;

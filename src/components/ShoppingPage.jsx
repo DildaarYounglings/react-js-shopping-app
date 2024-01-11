@@ -13,7 +13,7 @@ export const ShoppingCartItem = ({item,addToCart}) => {
     dialogRef.current.close()
   }
   return (
-    <div>
+    <div className="ShoppingCartItem">
       <p>productName: {item.productName},</p>productCategory:{item.productCategory},<p></p><p>price:{item.price}</p>
       <button onClick={() => addToCart(item)}>Add</button><button onClick={() => open()}>Comment</button>
       <dialog ref={dialogRef} style={{}}>
@@ -46,7 +46,7 @@ export const ShoppingPage = () => {
     <>
     <ShoppingPageHeader/>
     <div style={{ position: "absolute",left:"0px", display: "flex", flexDirection: "column",overflowY:"scroll",height:"fit-content",width:"100%",padding:"1rem",gap:"1rem"}}>
-      <div>
+      <div style={{display:"grid",gap:"3rem",gridTemplateColumns:"13% 13% 13% 13%"}}>
         {shoppingCartItems.map((object, index) => (
           <ShoppingCartItem key={index} item={object} addToCart={handleAddToCheckoutCart}/>
         ))}
