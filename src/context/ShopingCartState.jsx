@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useRef, useState } from "react";
 // <> //
 // Initial State //
 const initialState = {
@@ -59,7 +59,8 @@ const initialState = {
     },
   ],
   allCheckoutProducts: [],
-  isCheckoutCartOpen: true,
+  allCheckoutProductsFiltered:[],
+  isCheckoutCartOpen: false,
 };
 const ShoppingCartStateGlobalContext = React.createContext();
 // </> //
@@ -112,6 +113,14 @@ export const ShopingCartStateProvider = ({ children }) => {
     const { isCheckoutCartOpen } = globalState;
     setGlobalState({ ...globalState, isCheckoutCartOpen: !isCheckoutCartOpen });
   };
+  const handleSearchCheckoutItems = (searchText) => {
+    const {allCheckoutProducts} = globalState;
+    if(searchText === ""){
+      setGlobalState({...globalState,filteredCheckoutProducts:[...allCheckoutProducts]});
+    }else{
+      setGlobalState({...globalState,filteredCheckoutProducts:[...allCheckoutProducts].filter((item) => item.includes(searchText))});
+    }
+  };
 
   return (
     <ShoppingCartStateGlobalContext.Provider
@@ -122,6 +131,7 @@ export const ShopingCartStateProvider = ({ children }) => {
         handleCheckIfCartHasTheSameItem,
         handleDeleteItemFromCheckoutCart,
         handleToggleIsCheckoutCartOpen,
+        handleSearchCheckoutItems,
       }}
     >
       {children}

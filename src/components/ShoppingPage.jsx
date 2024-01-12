@@ -14,7 +14,7 @@ export const ShoppingCartItem = ({item,addToCart}) => {
   }
   return (
     <div className="ShoppingCartItem">
-      <p>productName: {item.productName},</p>productCategory:{item.productCategory},<p></p><p>price:{item.price}</p>
+      <p>{item.productName}</p><p>price:{item.price}</p>
       <button onClick={() => addToCart(item)}>Add</button><button onClick={() => open()}>Comment</button>
       <dialog ref={dialogRef} style={{}}>
         <ul style={{listStyleType:"none",display:"flex",flexDirection:"column",translate:"-3rem -1rem"}}>
@@ -45,8 +45,8 @@ export const ShoppingPage = () => {
   return (
     <>
     <ShoppingPageHeader/>
-    <div style={{ position: "absolute",left:"0px", display: "flex", flexDirection: "column",overflowY:"scroll",height:"fit-content",width:"100%",padding:"1rem",gap:"1rem"}}>
-      <div style={{display:"grid",gap:"3rem",gridTemplateColumns:"13% 13% 13% 13%"}}>
+    <div style={{ position: "absolute",left:"0px",top:"100px", display: "flex", flexDirection: "column",overflowY:"scroll",height:"fit-content",width:"100%",padding:"1rem",gap:"1rem"}}>
+      <div style={{display:"grid",gap:"3rem",gridTemplateColumns:"14% 14% 14%"}}>
         {shoppingCartItems.map((object, index) => (
           <ShoppingCartItem key={index} item={object} addToCart={handleAddToCheckoutCart}/>
         ))}
