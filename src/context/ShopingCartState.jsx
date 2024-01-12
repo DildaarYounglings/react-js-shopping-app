@@ -2,6 +2,7 @@ import React, { useContext, useRef, useState } from "react";
 // <> //
 // Initial State //
 const initialState = {
+
   allShopProducts: [
     {
       productName: "banana",
@@ -31,7 +32,7 @@ const initialState = {
       ],
     },
     {
-      productName: "orange",
+      productName: "pear",
       productCategory: "fruit",
       price: 5,
       quantity: 12,
@@ -59,7 +60,9 @@ const initialState = {
     },
   ],
   allCheckoutProducts: [],
-  allCheckoutProductsFiltered:[],
+  isAllCheckoutProductsFiltered: false,
+  searchText: "",
+  allCheckoutProductsFiltered: [],
   isCheckoutCartOpen: false,
 };
 const ShoppingCartStateGlobalContext = React.createContext();
@@ -75,6 +78,9 @@ export const ShoppingCartStateGlobalContextData = () =>
 // Provider component //
 export const ShopingCartStateProvider = ({ children }) => {
   const [globalState, setGlobalState] = useState(initialState);
+  const setSearchText = (text) => {
+    setGlobalState({ ...globalState, searchText: text })
+  };
 
   const handleCheckIfCartHasTheSameItem = (product) => {
     const allItemsToCheck = globalState.allCheckoutProducts.map(
@@ -113,13 +119,12 @@ export const ShopingCartStateProvider = ({ children }) => {
     const { isCheckoutCartOpen } = globalState;
     setGlobalState({ ...globalState, isCheckoutCartOpen: !isCheckoutCartOpen });
   };
-  const handleSearchCheckoutItems = (searchText) => {
-    const {allCheckoutProducts} = globalState;
-    if(searchText === ""){
-      setGlobalState({...globalState,filteredCheckoutProducts:[...allCheckoutProducts]});
-    }else{
-      setGlobalState({...globalState,filteredCheckoutProducts:[...allCheckoutProducts].filter((item) => item.includes(searchText))});
-    }
+  const handleSearchCheckoutItems = () => {
+    const { allCheckoutProducts, searchText } = globalState;
+    setGlobalState({ ...globalState, isAllCheckoutProductsFiltered: false });
+    if(searchText === "")return;
+    setGlobalState({ ...globalState, isAllCheckoutProductsFiltered: true });
+    setGlobalState({ ...globalState, filteredCheckoutProducts: [...allCheckoutProducts].filter((item) => item.productName.includes(searchText)) });
   };
 
   return (
@@ -132,6 +137,7 @@ export const ShopingCartStateProvider = ({ children }) => {
         handleDeleteItemFromCheckoutCart,
         handleToggleIsCheckoutCartOpen,
         handleSearchCheckoutItems,
+        setSearchText
       }}
     >
       {children}
