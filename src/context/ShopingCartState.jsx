@@ -119,14 +119,23 @@ export const ShopingCartStateProvider = ({ children }) => {
     const { isCheckoutCartOpen } = globalState;
     setGlobalState({ ...globalState, isCheckoutCartOpen: !isCheckoutCartOpen });
   };
-  const handleSearchCheckoutItems = () => {
-    const { allCheckoutProducts, searchText } = globalState;
-    setGlobalState({ ...globalState, isAllCheckoutProductsFiltered: false });
-    if(searchText === "")return;
-    setGlobalState({ ...globalState, isAllCheckoutProductsFiltered: true });
-    setGlobalState({ ...globalState, filteredCheckoutProducts: [...allCheckoutProducts].filter((item) => item.productName.includes(searchText)) });
+  const handleSearchCheckoutItems = (allCheckoutProductsFiltered,searchText) =>{
+    let filteredArray = allCheckoutProductsFiltered.filter((item) => item.productName.toUpperCase().includes(searchText.toUpperCase()));
+    setGlobalState({ ...globalState, allCheckoutProductsFiltered:[...filteredArray]});
+    console.log(globalState);
   };
-
+  const handleToggleisAllCheckoutProductsFiltered = () => {
+    const {allCheckoutProductsFiltered, searchText } = globalState;
+    console.log(searchText);
+    if(searchText.length > 0){
+      setGlobalState({ ...globalState,isAllCheckoutProductsFiltered: true });
+      handleSearchCheckoutItems(allCheckoutProductsFiltered,searchText);
+      setGlobalState({...globalState,searchText:""});
+    }else{
+      setGlobalState({ ...globalState, isAllCheckoutProductsFiltered: false });
+    }
+  };
+ 
   return (
     <ShoppingCartStateGlobalContext.Provider
       value={{
@@ -136,8 +145,9 @@ export const ShopingCartStateProvider = ({ children }) => {
         handleCheckIfCartHasTheSameItem,
         handleDeleteItemFromCheckoutCart,
         handleToggleIsCheckoutCartOpen,
-        handleSearchCheckoutItems,
-        setSearchText
+        handleToggleisAllCheckoutProductsFiltered,
+        setSearchText,
+        setGlobalState
       }}
     >
       {children}

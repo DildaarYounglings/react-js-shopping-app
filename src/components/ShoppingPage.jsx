@@ -2,7 +2,6 @@ import React, { useRef} from "react";
 import { ShoppingCartStateGlobalContextData } from "../context/ShopingCartState";
 import { ShoppingPageHeader } from "./ShoppingPageHeader";
 import { ShoppingPageFooter } from "./ShoppingPageFooter";
-import { CheckoutPage } from "./CheckoutPage";
 
 export const ShoppingCartItem = ({item,addToCart}) => {
   const dialogRef = useRef();

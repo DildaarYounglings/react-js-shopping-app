@@ -11,7 +11,10 @@ export const ReadyToBuyItem = ({ item, handleDeleteThisItem }) => {
       <button onClick={() => handleDeleteThisItem(item)}>Remove</button>
       <p>productName: {item.productName},</p>
       <p>productCategory:{item.productCategory},</p>
-      <p>quantity:{item.quantity} <input type="button" value="+" /><input type="button" value="-" /></p>
+      <p>
+        quantity:{item.quantity} <input type="button" value="+" />
+        <input type="button" value="-" />
+      </p>
       <p>price:{item.price}</p>
     </div>
   );
@@ -20,7 +23,11 @@ export const ClearCheckoutCartButton = ({
   handleClearCheckoutCart,
   handleToggleIsCheckoutCartOpen,
   searchTextState,
+  globalState,
+  setGlobalState,
+  isAllCheckoutProductsFiltered
 }) => {
+  const searchText = searchTextState[0];
   const setSearchText = searchTextState[1];
   return (
     <article style={{ display: "flex", gap: "0.125rem" }}>
@@ -34,9 +41,10 @@ export const ClearCheckoutCartButton = ({
       <input
         type="search"
         style={{ height: "1.5rem", width: "9.3rem" }}
+        value={searchText}
         onChange={(e) => setSearchText(e.target.value)}
       />
-      <button>search</button>
+      <button onClick={() => setGlobalState({...globalState,isAllCheckoutProductsFiltered:!isAllCheckoutProductsFiltered})}>toggle search view</button>
     </article>
   );
 };
@@ -44,21 +52,26 @@ export const ClearCheckoutCartButton = ({
 export const CheckoutPage = () => {
   const {
     globalState,
+    setGlobalState,
     handleClearCheckoutCart,
     handleDeleteItemFromCheckoutCart,
     handleToggleIsCheckoutCartOpen,
-    handleSearchCheckoutItems,
-    setSearchText
+    handleToggleisAllCheckoutProductsFiltered,
+    setSearchText,
   } = ShoppingCartStateGlobalContextData();
-  {/*useEffect(() => {},[]);*/}
+  
+  
   const {
     isCheckoutCartOpen,
     allCheckoutProducts,
     allCheckoutProductsFiltered,
     isAllCheckoutProductsFiltered,
-    searchText
+    searchText,
   } = globalState;
-  const readyToBuyItems = allCheckoutProducts;
+  useEffect(() => {
+    setGlobalState({...globalState,allCheckoutProductsFiltered:[...allCheckoutProducts].filter((item,index)=> item.productName.toUpperCase().includes(searchText.toUpperCase()))})
+  },[allCheckoutProducts,searchText]);
+  const isCheckoutProductsFiltered = isAllCheckoutProductsFiltered;
 
   return (
     <div
@@ -80,39 +93,43 @@ export const CheckoutPage = () => {
         }}
       >
         <ClearCheckoutCartButton
-          searchTextState={[searchText,setSearchText]}
-          handleSearchCheckoutItems={handleSearchCheckoutItems}
+          searchTextState={[searchText, setSearchText]}
+          setGlobalState={setGlobalState}
+          globalState={globalState}
+          isAllCheckoutProductsFiltered={isAllCheckoutProductsFiltered}
           handleClearCheckoutCart={handleClearCheckoutCart}
           handleToggleIsCheckoutCartOpen={handleToggleIsCheckoutCartOpen}
         />
       </div>
-        {isAllCheckoutProductsFiltered === false && 
-        <div
-            style={{ display: "flex", flexDirection: "column", gap: "1rem" }}
-          >
-            {allCheckoutProducts &&
-              allCheckoutProducts.map((allCheckoutProduct, index) => (
-                <ReadyToBuyItem
-                  key={index}
-                  item={allCheckoutProduct}
-                  handleDeleteThisItem={handleDeleteItemFromCheckoutCart}
-                />
-              ))}
-          </div>}
-          
-          {isAllCheckoutProductsFiltered === true && 
-            <div
-            style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
-            {allCheckoutProductsFiltered &&
-              allCheckoutProductsFiltered.map((allCheckoutProduct, index) => (
-                <ReadyToBuyItem
-                  key={index}
-                  item={allCheckoutProduct}
-                  handleDeleteThisItem={handleDeleteItemFromCheckoutCart}
-                />
-              ))}
-          </div>
-          }
+
+      {isCheckoutProductsFiltered === true ? (
+        <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
+          {allCheckoutProductsFiltered &&
+            allCheckoutProductsFiltered.map(
+              (allCheckoutProductFiltered, index) => (
+                <div key={index} className="ReadyToBuyItem">
+                  <p>productName: {allCheckoutProductFiltered.productName},</p>
+                  <p>
+                    productCategory:{allCheckoutProductFiltered.productCategory}
+                    ,
+                  </p>
+                  <p>price:{allCheckoutProductFiltered.price}</p>
+                </div>
+              )
+            )}
+        </div>
+      ) : (
+        <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
+          {allCheckoutProducts &&
+            allCheckoutProducts.map((allCheckoutProduct, index) => (
+              <ReadyToBuyItem
+                key={index}
+                item={allCheckoutProduct}
+                handleDeleteThisItem={handleDeleteItemFromCheckoutCart}
+              />
+            ))}
+        </div>
+      )}
     </div>
   );
 };
