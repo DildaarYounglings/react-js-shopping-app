@@ -79,7 +79,7 @@ export const ShoppingCartStateGlobalContextData = () =>
 export const ShopingCartStateProvider = ({ children }) => {
   const [globalState, setGlobalState] = useState(initialState);
   const setSearchText = (text) => {
-    setGlobalState({ ...globalState, searchText: text })
+    setGlobalState(g => ({ ...g, searchText: text }))
   };
 
   const handleCheckIfCartHasTheSameItem = (product) => {
@@ -93,7 +93,7 @@ export const ShopingCartStateProvider = ({ children }) => {
     if (handleCheckIfCartHasTheSameItem(product) === true) return;
     const { allCheckoutProducts } = globalState;
     let copy = [...allCheckoutProducts, product];
-    setGlobalState({ ...globalState, allCheckoutProducts: copy });
+    setGlobalState(g => ({ ...g, allCheckoutProducts: copy }));
   };
   const handleClearCheckoutCart = () => {
     if (
@@ -104,7 +104,7 @@ export const ShopingCartStateProvider = ({ children }) => {
       return;
     const { allCheckoutProducts } = globalState;
     let emptyArray = [];
-    setGlobalState({ ...globalState, allCheckoutProducts: emptyArray });
+    setGlobalState(g => ({ ...g, allCheckoutProducts: emptyArray }));
   };
   const handleDeleteItemFromCheckoutCart = (product) => {
     const { allCheckoutProducts } = globalState;
@@ -113,26 +113,26 @@ export const ShopingCartStateProvider = ({ children }) => {
     let isItemDeleted = mySet.delete(product);
     if (isItemDeleted === false) return;
     let copy = [...mySet];
-    setGlobalState({ ...globalState, allCheckoutProducts: copy });
+    setGlobalState(g => ({ ...g, allCheckoutProducts: copy }));
   };
   const handleToggleIsCheckoutCartOpen = () => {
     const { isCheckoutCartOpen } = globalState;
-    setGlobalState({ ...globalState, isCheckoutCartOpen: !isCheckoutCartOpen });
+    setGlobalState(g => ({ ...g, isCheckoutCartOpen: !isCheckoutCartOpen }));
   };
   const handleSearchCheckoutItems = (allCheckoutProductsFiltered,searchText) =>{
     let filteredArray = allCheckoutProductsFiltered.filter((item) => item.productName.toUpperCase().includes(searchText.toUpperCase()));
-    setGlobalState({ ...globalState, allCheckoutProductsFiltered:[...filteredArray]});
+    setGlobalState(g => ({ ...g, allCheckoutProductsFiltered:[...filteredArray]}));
     console.log(globalState);
   };
   const handleToggleisAllCheckoutProductsFiltered = () => {
     const {allCheckoutProductsFiltered, searchText } = globalState;
     console.log(searchText);
     if(searchText.length > 0){
-      setGlobalState({ ...globalState,isAllCheckoutProductsFiltered: true });
+      setGlobalState(g => ({ ...g,isAllCheckoutProductsFiltered: true }));
       handleSearchCheckoutItems(allCheckoutProductsFiltered,searchText);
-      setGlobalState({...globalState,searchText:""});
+      setGlobalState(g => ({...g,searchText:""}));
     }else{
-      setGlobalState({ ...globalState, isAllCheckoutProductsFiltered: false });
+      setGlobalState(g =>({ ...g, isAllCheckoutProductsFiltered: false }));
     }
   };
  
@@ -145,7 +145,6 @@ export const ShopingCartStateProvider = ({ children }) => {
         handleCheckIfCartHasTheSameItem,
         handleDeleteItemFromCheckoutCart,
         handleToggleIsCheckoutCartOpen,
-        handleToggleisAllCheckoutProductsFiltered,
         setSearchText,
         setGlobalState
       }}
