@@ -153,7 +153,10 @@ export const ShopingCartStateProvider = ({ children }) => {
   }
   const handleCalculatePrice = function() {
     const allCheckoutProducts = [...globalState.allCheckoutProducts];
-    if(allCheckoutProducts.length <= 0)return;
+    if(allCheckoutProducts.length <= 0){
+      setGlobalState((g) => ({...g,allCheckoutProductsPrice:0}));
+      return;
+    }
     const allCheckoutProductsPricesArray = allCheckoutProducts.map((value) => value.price * value.quantity);
     const allCheckoutProductsPricesAdded = allCheckoutProductsPricesArray.reduce((p,c) => {return p + c},0);
     setGlobalState((g) => ({...g,allCheckoutProductsPrice:allCheckoutProductsPricesAdded}));
