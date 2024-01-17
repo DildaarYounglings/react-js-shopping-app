@@ -1,7 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { ShoppingCartStateGlobalContextData } from "../context/ShopingCartState";
 
-export const ReadyToBuyItem = ({ item, handleDeleteThisItem }) => {
+export const ReadyToBuyItem = ({
+  item,
+  handleDeleteThisItem,
+  handleIncrementQuantity,
+  handleDecrementQuantity,
+}) => {
   if (!item) {
     console.log(item);
     return <div>nothing is appearing</div>;
@@ -12,8 +17,21 @@ export const ReadyToBuyItem = ({ item, handleDeleteThisItem }) => {
       <p>productName: {item.productName},</p>
       <p>productCategory:{item.productCategory},</p>
       <p>
-        quantity:{item.quantity} <input type="button" value="+" />
-        <input type="button" value="-" />
+        quantity:{item.quantity}{" "}
+        <input
+          type="button"
+          value="+"
+          onClick={() => {
+            handleIncrementQuantity(item,1);
+          }}
+        />
+        <input
+          type="button"
+          value="-"
+          onClick={() => {
+            handleDecrementQuantity(item,1);
+          }}
+        />
       </p>
       <p>price:{item.price}</p>
     </div>
@@ -25,7 +43,7 @@ export const ClearCheckoutCartButton = ({
   searchTextState,
   globalState,
   setGlobalState,
-  isAllCheckoutProductsFiltered
+  isAllCheckoutProductsFiltered,
 }) => {
   const searchText = searchTextState[0];
   const setSearchText = searchTextState[1];
@@ -44,7 +62,16 @@ export const ClearCheckoutCartButton = ({
         value={searchText}
         onChange={(e) => setSearchText(e.target.value)}
       />
-      <button onClick={() => setGlobalState({...globalState,isAllCheckoutProductsFiltered:!isAllCheckoutProductsFiltered})}>toggle search view</button>
+      <button
+        onClick={() =>
+          setGlobalState({
+            ...globalState,
+            isAllCheckoutProductsFiltered: !isAllCheckoutProductsFiltered,
+          })
+        }
+      >
+        toggle search view
+      </button>
     </article>
   );
 };
@@ -53,14 +80,14 @@ export const CheckoutPage = () => {
   const {
     globalState,
     setGlobalState,
+    handleIncrementProductQuantity,
+    handleDecrementProductQuantity,
     handleClearCheckoutCart,
     handleDeleteItemFromCheckoutCart,
     handleToggleIsCheckoutCartOpen,
-    handleToggleisAllCheckoutProductsFiltered,
     setSearchText,
   } = ShoppingCartStateGlobalContextData();
-  
-  
+
   const {
     isCheckoutCartOpen,
     allCheckoutProducts,
@@ -69,8 +96,16 @@ export const CheckoutPage = () => {
     searchText,
   } = globalState;
   useEffect(() => {
-    setGlobalState({...globalState,allCheckoutProductsFiltered:[...allCheckoutProducts].filter((item,index)=> item.productName.toUpperCase().includes(searchText.toUpperCase()))})
-  },[allCheckoutProducts,searchText]);
+    setGlobalState((g) =>{
+      return {
+        ...g,
+        allCheckoutProductsFiltered: [...allCheckoutProducts].filter(
+          (item, index) =>
+            item.productName.toUpperCase().includes(searchText.toUpperCase())
+        ),
+      };
+    });
+  }, [allCheckoutProducts, searchText]);
   const isCheckoutProductsFiltered = isAllCheckoutProductsFiltered;
 
   return (
@@ -124,6 +159,8 @@ export const CheckoutPage = () => {
             allCheckoutProducts.map((allCheckoutProduct, index) => (
               <ReadyToBuyItem
                 key={index}
+                handleIncrementQuantity={handleIncrementProductQuantity}
+                handleDecrementQuantity={handleDecrementProductQuantity}
                 item={allCheckoutProduct}
                 handleDeleteThisItem={handleDeleteItemFromCheckoutCart}
               />

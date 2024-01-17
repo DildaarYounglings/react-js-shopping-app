@@ -2,7 +2,6 @@ import React, { useContext, useRef, useState } from "react";
 // <> //
 // Initial State //
 const initialState = {
-
   allShopProducts: [
     {
       productName: "banana",
@@ -79,7 +78,7 @@ export const ShoppingCartStateGlobalContextData = () =>
 export const ShopingCartStateProvider = ({ children }) => {
   const [globalState, setGlobalState] = useState(initialState);
   const setSearchText = (text) => {
-    setGlobalState(g => ({ ...g, searchText: text }))
+    setGlobalState((g) => ({ ...g, searchText: text }));
   };
 
   const handleCheckIfCartHasTheSameItem = (product) => {
@@ -93,8 +92,9 @@ export const ShopingCartStateProvider = ({ children }) => {
     if (handleCheckIfCartHasTheSameItem(product) === true) return;
     const { allCheckoutProducts } = globalState;
     let copy = [...allCheckoutProducts, product];
-    setGlobalState(g => ({ ...g, allCheckoutProducts: copy }));
+    setGlobalState((g) => ({ ...g, allCheckoutProducts: copy }));
   };
+
   const handleClearCheckoutCart = () => {
     if (
       window.confirm(
@@ -102,9 +102,8 @@ export const ShopingCartStateProvider = ({ children }) => {
       ) === false
     )
       return;
-    const { allCheckoutProducts } = globalState;
     let emptyArray = [];
-    setGlobalState(g => ({ ...g, allCheckoutProducts: emptyArray }));
+    setGlobalState((g) => ({ ...g, allCheckoutProducts: emptyArray }));
   };
   const handleDeleteItemFromCheckoutCart = (product) => {
     const { allCheckoutProducts } = globalState;
@@ -113,40 +112,57 @@ export const ShopingCartStateProvider = ({ children }) => {
     let isItemDeleted = mySet.delete(product);
     if (isItemDeleted === false) return;
     let copy = [...mySet];
-    setGlobalState(g => ({ ...g, allCheckoutProducts: copy }));
+    setGlobalState((g) => ({ ...g, allCheckoutProducts: copy }));
   };
   const handleToggleIsCheckoutCartOpen = () => {
     const { isCheckoutCartOpen } = globalState;
-    setGlobalState(g => ({ ...g, isCheckoutCartOpen: !isCheckoutCartOpen }));
+    setGlobalState((g) => ({ ...g, isCheckoutCartOpen: !isCheckoutCartOpen }));
   };
-  const handleSearchCheckoutItems = (allCheckoutProductsFiltered,searchText) =>{
-    let filteredArray = allCheckoutProductsFiltered.filter((item) => item.productName.toUpperCase().includes(searchText.toUpperCase()));
-    setGlobalState(g => ({ ...g, allCheckoutProductsFiltered:[...filteredArray]}));
-    console.log(globalState);
+  const handleIncrementProductQuantity = function (product, number) {
+    let allCheckoutProducts = [...globalState.allCheckoutProducts];
+    if (!product && !number) return;
+    const allCheckoutProductsCopy = allCheckoutProducts;
+    const allCheckoutProductsCopy1 = allCheckoutProductsCopy.map((value) => {
+      if(value.productName === product.productName){
+        return({...value,quantity:value.quantity + number});
+      }else{
+        return value;
+      }
+    })
+    setGlobalState((g) => ({
+      ...g,
+      allCheckoutProducts:allCheckoutProductsCopy1,
+    }));
   };
-  const handleToggleisAllCheckoutProductsFiltered = () => {
-    const {allCheckoutProductsFiltered, searchText } = globalState;
-    console.log(searchText);
-    if(searchText.length > 0){
-      setGlobalState(g => ({ ...g,isAllCheckoutProductsFiltered: true }));
-      handleSearchCheckoutItems(allCheckoutProductsFiltered,searchText);
-      setGlobalState(g => ({...g,searchText:""}));
-    }else{
-      setGlobalState(g =>({ ...g, isAllCheckoutProductsFiltered: false }));
-    }
+  const handleDecrementProductQuantity = function (product, number) {
+    let allCheckoutProducts = [...globalState.allCheckoutProducts];
+    if (!product && !number) return;
+    const allCheckoutProductsCopy = allCheckoutProducts;
+    const allCheckoutProductsCopy1 = allCheckoutProductsCopy.map((value) => {
+      if(value.productName === product.productName){
+        return({...value,quantity:value.quantity - number});
+      }else{
+        return value;
+      }
+    })
+    setGlobalState((g) => ({
+      ...g,
+      allCheckoutProducts:allCheckoutProductsCopy1,
+    }));
   };
- 
   return (
     <ShoppingCartStateGlobalContext.Provider
       value={{
         globalState,
+        handleIncrementProductQuantity,
+        handleDecrementProductQuantity,
         handleAddToCheckoutCart,
         handleClearCheckoutCart,
         handleCheckIfCartHasTheSameItem,
         handleDeleteItemFromCheckoutCart,
         handleToggleIsCheckoutCartOpen,
         setSearchText,
-        setGlobalState
+        setGlobalState,
       }}
     >
       {children}
