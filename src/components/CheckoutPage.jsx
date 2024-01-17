@@ -80,6 +80,7 @@ export const CheckoutPage = () => {
   const {
     globalState,
     setGlobalState,
+    handleCalculatePrice,
     handleIncrementProductQuantity,
     handleDecrementProductQuantity,
     handleClearCheckoutCart,
@@ -94,6 +95,7 @@ export const CheckoutPage = () => {
     allCheckoutProductsFiltered,
     isAllCheckoutProductsFiltered,
     searchText,
+    allCheckoutProductsPrice
   } = globalState;
   useEffect(() => {
     setGlobalState((g) =>{
@@ -167,6 +169,7 @@ export const CheckoutPage = () => {
             ))}
         </div>
       )}
+      <button onClick={() => handleCalculatePrice()}>calculate price</button><span style={{color:"white"}}>total: $ {allCheckoutProductsPrice}</span>
     </div>
   );
 };

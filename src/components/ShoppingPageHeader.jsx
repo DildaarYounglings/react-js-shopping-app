@@ -5,7 +5,6 @@ import { ShoppingCartStateGlobalContextData } from '../context/ShopingCartState'
 export const ShoppingPageHeader = () => {
   const {globalState,handleToggleIsCheckoutCartOpen} = ShoppingCartStateGlobalContextData();
   const isCheckoutCartOpen = globalState.isCheckoutCartOpen;
-  const isCheckoutCartOpenAnimationTriggered = globalState.isCheckoutCartOpenAnimationTriggered;
   return (
     <div className="ShoppingPageHeader">
       <nav className="ShoppingPageHeaderNav">

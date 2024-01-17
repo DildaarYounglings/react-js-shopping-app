@@ -63,6 +63,7 @@ const initialState = {
   searchText: "",
   allCheckoutProductsFiltered: [],
   isCheckoutCartOpen: false,
+  allCheckoutProductsPrice:0,
 };
 const ShoppingCartStateGlobalContext = React.createContext();
 // </> //
@@ -149,11 +150,19 @@ export const ShopingCartStateProvider = ({ children }) => {
       ...g,
       allCheckoutProducts:allCheckoutProductsCopy1,
     }));
-  };
+  }
+  const handleCalculatePrice = function() {
+    const allCheckoutProducts = [...globalState.allCheckoutProducts];
+    if(allCheckoutProducts.length <= 0)return;
+    const allCheckoutProductsPricesArray = allCheckoutProducts.map((value) => value.price * value.quantity);
+    const allCheckoutProductsPricesAdded = allCheckoutProductsPricesArray.reduce((p,c) => {return p + c},0);
+    setGlobalState((g) => ({...g,allCheckoutProductsPrice:allCheckoutProductsPricesAdded}));
+  }
   return (
     <ShoppingCartStateGlobalContext.Provider
       value={{
         globalState,
+        handleCalculatePrice,
         handleIncrementProductQuantity,
         handleDecrementProductQuantity,
         handleAddToCheckoutCart,
