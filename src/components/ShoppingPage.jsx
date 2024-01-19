@@ -1,4 +1,4 @@
-import React, { useRef} from "react";
+import React, { useEffect, useRef} from "react";
 import { ShoppingCartStateGlobalContextData } from "../context/ShopingCartState";
 import { ShoppingPageHeader } from "./ShoppingPageHeader";
 import { ShoppingPageFooter } from "./ShoppingPageFooter";
@@ -38,14 +38,22 @@ export const ShoppingCartItem = ({item,addToCart}) => {
 
 
 export const ShoppingPage = () => {
-  const {globalState,handleAddToCheckoutCart} = ShoppingCartStateGlobalContextData();
+  const {globalState,handleAddToCheckoutCart,handlSetAllShopProducts} = ShoppingCartStateGlobalContextData();
   const shoppingCartItems = globalState.allShopProducts;
+  useEffect(() => {
+    const getData = async() => {
+      const data = await fetch('/api/products').then(res => res.json());
+      console.log(data);
+      handlSetAllShopProducts(data);
+    };
+    getData();
+  },[])
   return (
     <>
     <ShoppingPageHeader/>
     <div style={{ position: "absolute",left:"0px",top:"100px", display: "flex", flexDirection: "column",overflowY:"scroll",height:"fit-content",width:"100%",padding:"1rem",gap:"1rem"}}>
       <div style={{display:"grid",gap:"3rem",gridTemplateColumns:"14% 14% 14%"}}>
-        {shoppingCartItems.map((object, index) => (
+        {shoppingCartItems && shoppingCartItems.map((object, index) => (
           <ShoppingCartItem key={index} item={object} addToCart={handleAddToCheckoutCart}/>
         ))}
       </div>

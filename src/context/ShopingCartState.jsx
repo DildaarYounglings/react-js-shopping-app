@@ -3,60 +3,6 @@ import React, { useContext, useRef, useState } from "react";
 // Initial State //
 const initialState = {
   allShopProducts: [
-    {
-      productName: "banana",
-      productCategory: "fruit",
-      price: 10,
-      quantity: 12,
-      Comments: [
-        { username: "dildaar", content: "they have great quality bananas" },
-      ],
-    },
-    {
-      productName: "apple",
-      productCategory: "fruit",
-      price: 5,
-      quantity: 12,
-      Comments: [
-        { username: "dildaar", content: "they have great quality apples" },
-      ],
-    },
-    {
-      productName: "peach",
-      productCategory: "fruit",
-      price: 5,
-      quantity: 12,
-      Comments: [
-        { username: "dildaar", content: "they have great quality peaches" },
-      ],
-    },
-    {
-      productName: "pear",
-      productCategory: "fruit",
-      price: 5,
-      quantity: 12,
-      Comments: [
-        { username: "dildaar", content: "they have great quality oranges" },
-      ],
-    },
-    {
-      productName: "orange",
-      productCategory: "pear",
-      price: 5,
-      quantity: 12,
-      Comments: [
-        { username: "dildaar", content: "they have great quality pears" },
-      ],
-    },
-    {
-      productName: "strawberry",
-      productCategory: "fruit",
-      price: 5,
-      quantity: 12,
-      Comments: [
-        { username: "dildaar", content: "they have great quality strawberies" },
-      ],
-    },
   ],
   allCheckoutProducts: [],
   isAllCheckoutProductsFiltered: false,
@@ -81,7 +27,9 @@ export const ShopingCartStateProvider = ({ children }) => {
   const setSearchText = (text) => {
     setGlobalState((g) => ({ ...g, searchText: text }));
   };
-
+  const handlSetAllShopProducts = (allShopProducts) => {
+    setGlobalState((g) => ({...g,allShopProducts:[...allShopProducts]}));
+  }
   const handleCheckIfCartHasTheSameItem = (product) => {
     const allItemsToCheck = globalState.allCheckoutProducts.map(
       (item) => item.productName
@@ -165,6 +113,7 @@ export const ShopingCartStateProvider = ({ children }) => {
     <ShoppingCartStateGlobalContext.Provider
       value={{
         globalState,
+        handlSetAllShopProducts,
         handleCalculatePrice,
         handleIncrementProductQuantity,
         handleDecrementProductQuantity,
